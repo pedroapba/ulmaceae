@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: testjob
+spec:
+  template:
+    spec:
+      containers:      
+      - name: hello
+        image: busybox:1.28
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: USERNAME
+            value: "{{inputs.parameters.username}}"
+        command:
+        - /bin/sh
+        - -c
+        - date; echo Hello ${USERNAME} from the Kubernetes cluster
+      restartPolicy: OnFailure
+  backoffLimit: 3
