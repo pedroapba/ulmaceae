@@ -9,12 +9,9 @@ spec:
       - name: hello
         image: busybox:1.28
         imagePullPolicy: IfNotPresent
-        env:
-          - name: USERNAME
-            value: "{{inputs.parameters.username}}"
         command:
         - /bin/sh
         - -c
-        - date; echo Hello ${USERNAME} from the Kubernetes cluster
+        - date; echo Hello ${userName} from the Kubernetes cluster ${clusterId}
       restartPolicy: OnFailure
   backoffLimit: 3
