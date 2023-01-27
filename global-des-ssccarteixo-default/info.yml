@@ -1,0 +1,608 @@
+platform:
+  paas_yml:
+    dockerfile_template: ""
+    openshift_template: ""
+    environments:
+      des: {}
+      pre: {}
+      pro: {}
+    tenants: []
+    slots: []
+    bluegreen:
+      enabled: false
+  config_directory: config_paas/
+  configmapfilename: ""
+  projectbasedirectory: ""
+  supraenvironment: des
+  environment: des
+  platform: ssccarteixo
+  tenant: global
+  slot: default
+  prefix: ""
+  projecttypename: java
+  projectcategoryname: unknow-category
+  listderivevars: app.version=latest,jira_version=,jira_username=inditex-chatbot,build_number=213,plan_key=TESTUPGOC,plan_name=wsc-testupgradeocp,build_time_stamp=2023-01-12T08:16:53.000-00:00,commit=d99e30cd1ecfec11917e357f7f1b6dbebfd43cb0,branch=test/add-commit-info-deployment-pr,repo_url=https://github.com/inditex/wsc-testupgradeocp.git,build_results_url=https://github.com/inditex/wsc-testupgradeocp/actions/runs/3900381365,is_new_flow=true
+  validate: true
+  validatefile: ""
+  values:
+    amq:
+      annotations:
+        try_skip_volume_selinux_label: true
+      enabled: false
+      rlimit:
+        nofile: "2048"
+    api: https://des-openshift-private.axdesocp1.central.inditex.grp/testupgoc/amiga/metadata
+    app:
+      annotations:
+        try_skip_volume_selinux_label: true
+      binary: testupgradeocp-boot/target/testupgradeocp-boot-0.4.0-SNAPSHOT.jar
+      context_path: /testupgoc
+      context_path_base_calculated: /testupgoc
+      context_path_builder:
+        enabled: true
+      deployment_strategy:
+        active_deadline_seconds_deploy_pod: 21600
+        rolling:
+          enabled: false
+        timeout_seconds: 600
+      dns_config:
+        single_request_enabled: true
+      dns_policy: ClusterFirst
+      dockerfile:
+        labels:
+          jfrog_retention_max_count:
+            name: com.jfrog.artifactory.retention.maxCount
+            value: 5
+      dockerfile_from: itxbase/jre11:11.0.12
+      dockerfile_template: com.inditex.otec.dockerfile:dockerfile-springboot:1.2.0
+      grpc:
+        client:
+          ssl:
+            enabled: true
+      has_limit: true
+      has_spnego: false
+      health_probe:
+        enabled: true
+        failure_threshold: 3
+        http_path: /amiga/health
+        http_port: 8080
+        initial_delay_seconds: 30
+        period_seconds: 10
+        success_threshold: 1
+        timeout_seconds: 1
+      instrumented:
+        liveness_probe:
+          initial_delay_seconds: 30
+          period_seconds: 20
+          timeout_seconds: 1
+        pod_disruption_min_budget: 50%
+        readiness_probe:
+          initial_delay_seconds: 30
+          period_seconds: 5
+          timeout_seconds: 1
+        replicas: 0
+      instrumented_replicas: 0
+      java_options: '  -Dspring.config.additional-location=file:/opt/conf/configmap/,file:/opt/conf/secret/
+        -Dspring.profiles.active=configmap,secret'
+      java_options_common: ' '
+      jvm:
+        mem_ratio:
+          max: 39
+        smith_agent:
+          url: develop-grpc-smithwsc.axdesocp1.central.inditex.grp
+      limits:
+        cpu: "1"
+        memory: 1024Mi
+      liveness_probe:
+        enabled: true
+        failure_threshold: 3
+        http_path: /testupgoc/amiga/health
+        http_port: 8081
+        initial_delay_seconds: 30
+        period_seconds: 20
+        success_threshold: 1
+        timeout_seconds: 1
+      main_class: com.inditex.testupgoc.Application
+      openshift_template: com.inditex.sentinel:senttapp-springboot:2.6.0
+      pod_disruption_min_budget: 0
+      pvc:
+        shared: storage
+        subpath: testupgoc
+      readiness_probe:
+        enabled: true
+        failure_threshold: 2
+        http_path: /testupgoc/amiga/readiness
+        http_port: 8081
+        initial_delay_seconds: 30
+        period_seconds: 5
+        success_threshold: 1
+        timeout_seconds: 1
+      replicas: 1
+      rlimit:
+        nofile: 2048
+      services:
+        grpc:
+          enabled: false
+          port: 6568
+          route:
+            enabled: true
+        http:
+          enabled: true
+          port: 8080
+          route:
+            enabled: true
+            host: des-openshift.axdesocp1.central.inditex.grp
+            host_default: axdesocp1.central.inditex.grp
+            path: /testupgoc
+            pod_concurrent_connections: 100
+            static:
+              enabled: false
+            tls:
+              enabled: true
+              insecure_temination_policy: Redirect
+              insecure_termination_policy: Redirect
+          route_private:
+            enabled: false
+        http_adm:
+          route:
+            host: adm-add-commit-info-deployment-pr-testupgoc.axdesocp1.central.inditex.grp
+        http_private:
+          enabled: true
+          port: 8081
+          route:
+            enabled: true
+            host: des-openshift-private.axdesocp1.central.inditex.grp
+            host_default: private.axdesocp1.central.inditex.grp
+            path: /testupgoc/amiga
+            tls:
+              enabled: true
+              insecure_termination_policy: Redirect
+        session_affinity: None
+      spa:
+        context_path_redirect: false
+        enabled: false
+      technology: amiga-java:4.11.3
+      timezone: Europe/Madrid
+      tls:
+        enabled: false
+        insecure_temination_policy: Redirect
+      tomcat:
+        server:
+          accept_count: 100
+          connection_timeout: 30000
+          file_encoding: UTF-8
+          max_connections: 500
+          max_http_header_size: 40000
+          max_http_post_size: 2097152
+          max_threads: 200
+          min_spare_threads: 10
+          server_header: ""
+          uri_encoding: UTF-8
+      version: latest
+    app_url_hostname: add-commit-info-deployment-pr
+    app_url_subdomain: -testupgoc
+    application_type: java
+    artifact_id: testupgradeocp
+    aux_old_route_private_path: /testupgoc/amiga
+    aux_private_route_path: /testupgoc/amiga
+    branch: test/add-commit-info-deployment-pr
+    branch_last_token: add-commit-info-deployment-pr
+    branch_short: add-commit-info-deployment-pr
+    build_label: TESTUPGOC-213
+    build_number: "213"
+    build_results_url: https://github.com/inditex/wsc-testupgradeocp/actions/runs/3900381365
+    build_time_stamp: "2023-01-12T08:16:53.000-00:00"
+    ceph:
+      endpoint: axdesrgwlb1.central.inditex.grp
+    commit: d99e30cd1ecfec11917e357f7f1b6dbebfd43cb0
+    commit_short: d99e30c
+    common_host: des-openshift
+    common_private_host: des-openshift-private
+    context_path_identifier_with_slot: testupgoc
+    context_path_identifier_without_slot: testupgoc
+    criticality: LOW
+    datagrid:
+      application_cache:
+        enabled: false
+      ping: dns
+      session:
+        enabled: false
+    deploy_timestamp: UNUSED-IN-SPINNAKER
+    dns_policy: ClusterFirst
+    doc_url: https://srvdoc.axinocp1.central.inditex.grp/catalog/global/swdelivery/rps/TESTUPGOC?e=des&p=ssccarteixo&s=default&v=0.4.0-SNAPSHOT
+    docker_image: axdesregistry1.central.inditex.grp/itxapps/testupgoc:0.4.0-SNAPSHOT-STREAM-add-commit-info-deployment-pr-20230112-081539-d99e30c
+    docker_image_repository_name: testupgoc
+    docker_image_version: 0.4.0-SNAPSHOT-STREAM-add-commit-info-deployment-pr-20230112-081539-d99e30c
+    docker_registry: axdesregistry1.central.inditex.grp
+    dockerfile_template: com.inditex.otec.dockerfile:dockerfile-springboot:1.2.0
+    domain: axdesocp1.central.inditex.grp
+    endpoint: https://des-openshift-private.axdesocp1.central.inditex.grp/testupgoc/amiga
+    environment: des
+    framework_version: com.inditex.aqsw.framework.amiga:amiga-framework:4.11.3
+    group_id: com.inditex.testupgoc
+    grpc_route_ssl_host: axdesocp1.central.inditex.grp
+    grpc_ssl_cer: QmFnIEF0dHJpYnV0ZXMKICAgIGxvY2FsS2V5SUQ6IDAxIDAwIDAwIDAwIApzdWJqZWN0PUwgPSBBcnRlaXhvLCBPID0gSW5kaXRleCwgT1UgPSBBcnF1aXRlY3R1cmEgU29mdHdhcmUsIENOID0gZGV2b3BzLWF4ZGVzb2NwMS5jZW50cmFsLmluZGl0ZXguZ3JwCgppc3N1ZXI9TyA9IEluZGl0ZXgsIENOID0gSW5kaXRleCBJbnRyYW5ldCBJc3N1aW5nIDEgQ0EgdjEKCi0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLQpNSUlIRXpDQ0JmdWdBd0lCQWdJS1BuME9Qd0FDQUQ5R0RUQU5CZ2txaGtpRzl3MEJBUXNGQURBOU1SQXdEZ1lEClZRUUtFd2RKYm1ScGRHVjRNU2t3SndZRFZRUURFeUJKYm1ScGRHVjRJRWx1ZEhKaGJtVjBJRWx6YzNWcGJtY2cKTVNCRFFTQjJNVEFlRncweU1UQTJNakl5TXpBeE1qWmFGdzB5TXpBMk1qSXlNekF4TWpaYU1ITXhFREFPQmdOVgpCQWNUQjBGeWRHVnBlRzh4RURBT0JnTlZCQW9UQjBsdVpHbDBaWGd4SGpBY0JnTlZCQXNURlVGeWNYVnBkR1ZqCmRIVnlZU0JUYjJaMGQyRnlaVEV0TUNzR0ExVUVBeE1rWkdWMmIzQnpMV0Y0WkdWemIyTndNUzVqWlc1MGNtRnMKTG1sdVpHbDBaWGd1WjNKd01JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBcjFjcQpyMDJQQ3hhc1MxeVRqMWdjUlRFRm04dnkzN1ROc2hBZjJZTFdYa3dYYStSeDQrQ0JiS2VoSlF6alV3MEdiOVdHCndJNGllS3V0Qk5WWkV1bnQrZXY3SGpwT3l4d1VtUG9oQ2xzRUZyM29HSkh0TFQ1dEdtS0tLRUxMb1pyWVk3WWEKK2FHVjBsekh5amx6V2hycGhSTUxKbnRudk44Tkh2dEtuSWdMbE9xU3h3QUVCand5c0tCZHhtUWpRczBub3lqegpmNngrRzJheG5xWkU3NnJZSncxRTlFTFlvMkthWFdUWEx0czJNMk5yV2lhQXJ0aHBZeUtBV2MwWGxCV3RpakhYCnFMYS96WlVKeSswcnZrMW9aSHlwaFBSdmViM2JjVHBBTHBGWGhLR2xrUzVQdjRWNGdZN0hzNUIvR2lhN21IRjQKYkhsaEs0am05ellYZElzSTB3SURBUUFCbzRJRDNUQ0NBOWt3Q3dZRFZSMFBCQVFEQWdXZ01Ec0dDU3NHQVFRQgpnamNWQndRdU1Dd0dKQ3NHQVFRQmdqY1ZDSVdvNkRpcHFrcUYrWnNNNi85eGg1RFlMelNIbTlvQWhwdlZPQUlCClpBSUJSakFkQmdOVkhRNEVGZ1FVSDl6Zk5OamsxMWNiM3lDQkgwMGpmSThsQ1Q0d0h3WURWUjBqQkJnd0ZvQVUKK1hJNERuekc0Z0V2Wkd5NGNjZ2xWVGZnYzFZd2dnRTlCZ05WSFI4RWdnRTBNSUlCTURDQ0FTeWdnZ0Vvb0lJQgpKSWFCMTJ4a1lYQTZMeTh2UTA0OVNXNWthWFJsZUNVeU1FbHVkSEpoYm1WMEpUSXdTWE56ZFdsdVp5VXlNREVsCk1qQkRRU1V5TUhZeEtESXBMRU5PUFVGWVNVNURRVk5WUWpFc1EwNDlRMFJRTEVOT1BWQjFZbXhwWXlVeU1FdGwKZVNVeU1GTmxjblpwWTJWekxFTk9QVk5sY25acFkyVnpMRU5PUFVOdmJtWnBaM1Z5WVhScGIyNHNSRU05YVc1awphWFJsZUN4RVF6MW5jbkEvWTJWeWRHbG1hV05oZEdWU1pYWnZZMkYwYVc5dVRHbHpkRDlpWVhObFAyOWlhbVZqCmRFTnNZWE56UFdOU1RFUnBjM1J5YVdKMWRHbHZibEJ2YVc1MGhraG9kSFJ3T2k4dlkzSnNMbWx1WkdsMFpYZ3UKWTI5dEwwbHVaR2wwWlhnbE1qQkpiblJ5WVc1bGRDVXlNRWx6YzNWcGJtY2xNakF4SlRJd1EwRWxNakIyTVNneQpLUzVqY213d2dnRjBCZ2dyQmdFRkJRY0JBUVNDQVdZd2dnRmlNSUhKQmdnckJnRUZCUWN3QW9hQnZHeGtZWEE2Ckx5OHZRMDQ5U1c1a2FYUmxlQ1V5TUVsdWRISmhibVYwSlRJd1NYTnpkV2x1WnlVeU1ERWxNakJEUVNVeU1IWXgKTEVOT1BVRkpRU3hEVGoxUWRXSnNhV01sTWpCTFpYa2xNakJUWlhKMmFXTmxjeXhEVGoxVFpYSjJhV05sY3l4RApUajFEYjI1bWFXZDFjbUYwYVc5dUxFUkRQV2x1WkdsMFpYZ3NSRU05WjNKd1AyTkJRMlZ5ZEdsbWFXTmhkR1UvClltRnpaVDl2WW1wbFkzUkRiR0Z6Y3oxalpYSjBhV1pwWTJGMGFXOXVRWFYwYUc5eWFYUjVNR3NHQ0NzR0FRVUYKQnpBQ2hsOW9kSFJ3T2k4dlkzSnNMbWx1WkdsMFpYZ3VZMjl0TDBGWVNVNURRVk5WUWpFdWFXNWthWFJsZUM1bgpjbkJmU1c1a2FYUmxlQ1V5TUVsdWRISmhibVYwSlRJd1NYTnpkV2x1WnlVeU1ERWxNakJEUVNVeU1IWXhLRElwCkxtTnlkREFuQmdnckJnRUZCUWN3QVlZYmFIUjBjRG92TDJOeWJDNXBibVJwZEdWNExtTnZiUzl2WTNOd01CTUcKQTFVZEpRUU1NQW9HQ0NzR0FRVUZCd01CTUJzR0NTc0dBUVFCZ2pjVkNnUU9NQXd3Q2dZSUt3WUJCUVVIQXdFdwpZZ1lEVlIwUkJGc3dXWUlIS2k0cUxuTjJZNElWS2k0cUxuTjJZeTVqYkhWemRHVnlMbXh2WTJGc2doWXFMaW91CmMzWmpMbU5zZFhOMFpYSXViRzlqWVd3dWdoOHFMbUY0WkdWemIyTndNUzVqWlc1MGNtRnNMbWx1WkdsMFpYZ3UKWjNKd01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ0FWbW54MitxNUtYWFJMRWd4Rnd3V3p1ZWYrQXNTa2JkVQp1Mng4ZlFjQWxOUS9yUDVVRGoxT2J4OWdTQ2daRUh6dk1MU2ZHMVhkd3IzNW1kRjRia3dYT1d1dkhYdVBnaThwCmd1VUY2c01DZit3MVNkcTRWWlQ3QVpTTllGckFEMFdhZmFHblZtUng2NTVWMmt3RUhQQzFKRjNDSlAyZUc0OEkKbnBzMDM1QkRVZnhvVXluZmpwUXlxeUZUSGVYQmpLRGswejVyMkZZbWszLzFyZ2tTLy9mN014OW9XTWkwcEZXZgp3cEo3d1lSVlV0enpzKzFHSENxUGtrRS9LTldYNG9VVVhDMjRPaktpSzRGM0MvMDBQc1dic2w0M1daRUNOQTlFCld2QWFxSG1VY0hCQlZ1dW1kNTlZeTNBaFBUcEw0YXcySFFGY1FFNDlWZm55c0VGaXZRNGQKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    grpc_ssl_key_secret: cyberark.AX-N-ASO-OST-CD_DES.Application-ITX-APP-200-SC-OPENSHIFT-axdesocp1.central.inditex.grp-devops-key-b64
+    has_config_map: true
+    has_secrets: true
+    imageStream: add-commit-info-deployment-pr
+    is_framework_version_ge_2_0_0: true
+    is_framework_version_ge_3_0_0: true
+    is_framework_version_ge_4_0_0: true
+    is_new_flow: "true"
+    is_ocp: "true"
+    is_ocp4: "true"
+    janus:
+      enabled: true
+    jira_username: inditex-chatbot
+    jira_version: 0.4.0-SNAPSHOT
+    kafka_logging_topic: app.axdesocp1.logs
+    kafka_metrics_topic: app.axdesocp1.metrics
+    kafka_nodes: axdeskafka1n1.central.inditex.grp.:9092,axdeskafka1n2.central.inditex.grp.:9092,axdeskafka1n3.central.inditex.grp.:9092
+    metadata:
+      build: TESTUPGOC-213
+      developModel: CORPORATE
+      domain: swdelivery
+      environment: des
+      jiracategory: unknow-category
+      jirakey: TESTUPGOC
+      jiraprojectname: wsc-testupgradeocp
+      layer: core
+      openshiftproject: testupgoc
+      platform: Openshift-SSCC Arteixo
+      platformgroup: sscc
+      platformid: ssccarteixo
+      project_key: TESTUPGOC
+      project_name: wsc-testupgradeocp
+      service: rps
+      slot: default
+      tagCloud: []
+      tenant: global
+      version: 0.4.0-SNAPSHOT
+    openshift_template: com.inditex.sentinel:senttapp-springboot:2.6.0
+    os_project_key: testupgoc
+    paas:
+      common:
+        oauth2_client:
+          default_client_config:
+            uri_token: http://dataplane-sscc.kongprd.svc.cluster.local/private/authenticate
+      service:
+        aaa:
+          oidc:
+            server:
+              url: https://sscc-int.axdesapigwlb.central.inditex.grp/am/authserver/v1/oauth/jwks?realm=/intranet
+    packaging: pom
+    parent:
+      artifact_id: amiga-framework
+      group_id: com.inditex.aqsw.framework.amiga
+      version: 4.11.3
+    parent_version: ""
+    plan_key: TESTUPGOC
+    plan_name: wsc-testupgradeocp
+    platform: ssccarteixo
+    platformgroup: sscc
+    pmp:
+      disable_env_verification: false
+    project_key: TESTUPGOC
+    project_key_lower: testupgoc
+    project_type_name: java
+    repo_url: https://github.com/inditex/wsc-testupgradeocp.git
+    resource_id: testupgoc
+    resource_id_default: testupgoc
+    resource_version_label: 0.4.0-SNAPSHOT
+    slot: default
+    slot_postfix: ""
+    slot_postfix_wo_hyphen: ""
+    solr:
+      annotations:
+        try_skip_volume_selinux_label: true
+    spinnaker:
+      max_version_history: 6
+    supraenvironment: des
+    tenant_separator: '-'
+    version: 0.4.0-SNAPSHOT
+    visibility: PUBLIC
+  os: ""
+configmap:
+  values:
+    amiga:
+      common:
+        config:
+          client:
+            rest:
+              base-url: http://sscc.miccnfsv.svc.cluster.local.:8080/miccnfsv-sscc
+          context-resolver:
+            metadata:
+              white-list: jirakey,slot,jiracategory,layer,platform,domain,service,jiraprojectname,platformgroup,tenant
+          enabled: false
+          server:
+            mock: false
+        core:
+          events:
+            security:
+              enabled: true
+          graceful-shutdown:
+            enabled: true
+          is-production: false
+        grpcclient:
+          default-executor-config:
+            rejected-execution-policy: CALLER_RUNS
+          sslpathfile: /opt/conf/sslcerts/tls.crt
+        kafka:
+          client:
+            logging:
+              enabled: true
+              producer:
+                acks: 0
+                retries: 1
+              topic: app.axdesocp1.logs
+            metrics:
+              topic: app.axdesocp1.metrics
+            sleuth:
+              topic: app.axdesocp1.tracing
+            tracing:
+              topic: app.axdesocp1.tracing
+            tracker:
+              topic: app.axdesocp1.events
+            trafficAuditorKafkaClient:
+              producer:
+                acks: 0
+                compression-type: snappy
+                retries: 1
+              topic: app.axdesocp1.audit
+        logging:
+          black-list-additional-field-keys: Authorization,authorization,wctoken,wctrustedtoken,cookie
+          black-list-header-keys: Authorization,authorization,wctoken,wctrustedtoken,cookie
+          blacklist: password,passwd,contrasenya,pwd,pass,contrase\u00f1a,contrase\u00d1a,encryptedPassword,encryptedPass,encryptedPasswd,encryptedPwd,secret
+          console:
+            async:
+              enabled: true
+            threshold-level: TRACE
+          include-tracing-fields: false
+          kafka:
+            level: TRACE
+            sender:
+              enabled: true
+          staticFields:
+            _environment: des
+            _tenant: global
+        metrics:
+          enabled: true
+          export:
+            influx:
+              batchSize: 500
+          jvm-attributes:
+            enabled: true
+          metadata:
+            whitelist: domain,platform,tenant,environment,jiraprojectname,jirakey,instanceId,hostname,slot,platformgroup,service
+          scheduled:
+            fixed-delay: 60000
+            fixed-delay-step: PT1M
+            initial-delay: 60000
+          send: true
+        oauth2-client:
+          default-client-config:
+            uri-token: http://dataplane-sscc.kongprd.svc.cluster.local/private/authenticate
+        reactor:
+          scheduler:
+            computation:
+              async:
+                rejected-execution-policy: CALLER_RUNS
+        rest:
+          client:
+            rules-configtool:
+              base-url: http://sscc.miccnfsv.svc.cluster.local.:8080/miccnfsv-sscc
+        sleuth:
+          async:
+            enabled: false
+          cache:
+            enabled: false
+          enabled: true
+          jdbc:
+            enabled: true
+          metadata:
+            all-span-keys: domain,tenant,environment,jirakey,jiraProjectName,layer,slot,service,platform,platformid
+          sampler:
+            probability: 0.01
+          send: true
+        tracker:
+          sender: KAFKA
+          start-stop-tracker:
+            enabled: true
+      data:
+        couchbase:
+          environment:
+            keepAliveIntervalMilliseconds: 4000
+            keepAliveTimeout: 10000
+            kvEndpoints: 1
+            queryServiceEndpoints: 1
+            searchEndpoints: 1
+            socketConnectTimeout: 10000
+            viewServiceEndpoints: 1
+        graylog:
+          configuration:
+            hostname: axdesgraylog.central.inditex.grp
+            port: 12201
+        jdbc:
+          pool:
+            atomikos:
+              max-pool-size: 10
+              min-pool-size: 0
+            hikari:
+              maximum-pool-size: 10
+              minimum-idle: 0
+        kafka:
+          configuration:
+            bootstrap-servers: axdeskafka1n1.central.inditex.grp.:9092,axdeskafka1n2.central.inditex.grp.:9092,axdeskafka1n3.central.inditex.grp.:9092
+            max-block-ms: 1000
+          metrics:
+            consumer:
+              enabled: false
+            producer:
+              enabled: false
+      management:
+        server:
+          context-path: /testupgoc
+          port: 8081
+      server:
+        context-path: /testupgoc
+        port: 8080
+      service:
+        aaa:
+          classic:
+            ldap:
+              domain: central.inditex.grp
+              root-dn: dc=inditex,dc=grp
+              url: ldap://axingc.central.inditex.grp:3268
+          local:
+            enable-local-test: true
+          oidc:
+            authorities:
+              fields: brand,scope,userType,identityType,authMethod
+            claims:
+              mandatory: sub,iss,aud,iat,exp
+            default-signer-verifier:
+              enabled: false
+              kid: ITX-DEFAULT-SIGNER-VERIFIER
+            resourceId: ${null:#{null}}
+            server:
+              url: https://sscc-int.axdesapigwlb.central.inditex.grp/am/authserver/v1/oauth/jwks?realm=/intranet
+          paths:
+            app-public-path: /swagger-ui**,/itx-openapi.js
+            fwk-public-path: /amiga/health,/amiga/validationCheck,/authentication/**,/webjars/**,/amiga/metadata,/amiga/catalog,/amiga/threads/**,/amiga/threads.html,/amiga/thread.html,/amiga/style.css,/amiga/threads/servlet,/amiga/validationCheckStatus/api,/amiga/metrics,/amiga/metrics/**,/amiga/loggers,/amiga/loggers/**,/amiga/cache,/amiga/cache/**,/amiga/grpc-invoker,/amiga/grpc-invoker/**,/amiga/traffic-auditor,/amiga/traffic-auditor/**,/amiga/jms,/amiga/jms/**,/amiga/readiness,/favicon.ico,/amiga/couchbaseMulticluster,/amiga/couchbase,/amiga/couchbase/**,/grpc/protos.zip,/amiga/chaosmonkey,/amiga/chaosmonkey/**,/csp-report,/web/csp-report
+          user-details:
+            heimdal:
+              endpoint: http://hmdlquery-sscc.hmdlquery.svc.cluster.local.:8080/hmdlquery-sscc
+            sso:
+              url-base: https://apigw-sscc-des.axdesocp1.central.inditex.grp/hmdladaptr
+        bus:
+          binder:
+            jms:
+              connectionFactory:
+                brokerURL: failover:(tcp://middleware-amq-tcp.miccnfsv.svc.cluster.local.:61616)
+                username: usr-readout
+          destination: global.core.miccnfsv.public.config-sscc-des-global
+          enabled: false
+          refresh:
+            property:
+              enabled: true
+        datagrid:
+          host: testupgoc-datagrid.testupgoc.svc.cluster.local.
+          port: 11222
+        grpc:
+          metrics:
+            enabled: true
+        metrics:
+          enabled: true
+          send: true
+        rest:
+          logging:
+            is-production: false
+        rest-swagger:
+          enabled: true
+        tracing:
+          enabled: true
+          sending:
+            enabled: true
+    logging:
+      level:
+        org:
+          apache:
+            kafka:
+              clients: WARN
+    management:
+      health:
+        defaults:
+          enabled: false
+      server:
+        add-application-context-header: false
+    metadata:
+      build: TESTUPGOC-213
+      domain: swdelivery
+      environment: des
+      jiracategory: unknow-category
+      jirakey: TESTUPGOC
+      jiraprojectname: wsc-testupgradeocp
+      layer: core
+      openshiftproject: testupgoc
+      platform: Openshift-SSCC Arteixo
+      platformgroup: sscc
+      platformid: ssccarteixo
+      service: rps
+      slot: default
+      tenant: global
+      version: 0.4.0-SNAPSHOT
+    server:
+      connection-timeout: 30000
+      max-http-header-size: 40000
+      server-header: ""
+      servlet:
+        session:
+          cookie:
+            http-only: true
+            name: SESSIONID
+            secure: true
+          timeout: 1800
+          tracking-modes: cookie
+      tomcat:
+        accept-count: 100
+        basedir: /tmp/tomcat/workdir
+        max-connections: 500
+        max-http-post-size: 2097152
+        threads:
+          max: 200
+          min-spare: 10
+        uri-encoding: UTF-8
+    slot_suffix: ""
+    spring:
+      application:
+        id: testupgoc
+        name: testupgoc
+      cloud:
+        stream:
+          kafka:
+            binder:
+              autoCreateTopics: false
+      http:
+        encoding:
+          charset: UTF-8
+      security:
+        filter:
+          dispatcher-types: ASYNC,FORWARD,INCLUDE,REQUEST
+          order: 0
+        user:
+          name: ""
+          password: ""
+          role: ""
+      servlet:
+        multipart:
+          file-size-threshold: 1MB
+          location: /tmp
+      sleuth:
+        async:
+          configurer:
+            enabled: false
+        sampler:
+          percentage: 0.01
+        supports:
+          join: false
+      zipkin:
+        kafka:
+          topic: ${amiga.common.kafka.client.sleuth.topic}
+        service:
+          name: ${spring.application.name}
+secret:
+  values:
+    amiga:
+      service:
+        aaa:
+          oidc:
+            default-signer-verifier:
+              key: secret
+        bus:
+          binder:
+            jms:
+              connectionFactory:
+                password: pmp.OpenShift_ActiveMQ_Brokers_DES.amq-password-global-core-readout
+database:
+  values: {}
